@@ -1,3 +1,3 @@
-# Purchasable contract template
+# SharkStreet contract
 
-Template for contracts compliant with SlicerPurchasable extension
+SlicerPurchasable contract for Shark Street
