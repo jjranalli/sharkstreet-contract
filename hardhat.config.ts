@@ -3,6 +3,7 @@ import { TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD } from "hardhat/builtin-tasks/task
 import dotenv from "dotenv"
 import path from "path"
 import "@typechain/hardhat"
+import "@openzeppelin/hardhat-upgrades"
 import "@nomiclabs/hardhat-waffle"
 import "solidity-coverage"
 import "hardhat-gas-reporter"
@@ -20,13 +21,13 @@ module.exports = {
     //     mnemonic: process.env.MNEMONIC,
     //   },
     // },
-    // mainnet: {
-    //   url: process.env.URL_MAINNET,
-    //   accounts: {
-    //     mnemonic: process.env.MNEMONIC,
-    //   },
-    //   gasPrice: 40000000000,
-    // },
+    mainnet: {
+      url: process.env.URL_MAINNET,
+      accounts: {
+        mnemonic: process.env.MNEMONIC,
+      },
+      gasPrice: 13000000000,
+    },
   },
   solidity: {
     version: "0.8.13",
