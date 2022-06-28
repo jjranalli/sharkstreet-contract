@@ -16,22 +16,25 @@ contract SharkStreet is ERC721, SlicerPurchasable, Ownable {
     /// ============ Constructor ============
 
     constructor(
-        string memory name_,
-        string memory symbol_,
         address productsModuleAddress_,
-        uint256 slicerId_
+        uint256 slicerId_,
+        string memory name_,
+        string memory symbol_
     ) ERC721(name_, symbol_) SlicerPurchasable(productsModuleAddress_, slicerId_) {
-        // _mint(address1);
-        // _mint(address2);
-        // _mint(address3);
-        // _mint(address4);
-        // _mint(address5);
+        _mint(0x728A4DDe804aeDaF93AC839C9B0Fce031e0361af); // Marxist
+        _mint(0x728A4DDe804aeDaF93AC839C9B0Fce031e0361af); // Marxist
+        _mint(0xDEAD753f9B1eb8F2f7372E8587e7C6e342daac89); // Maty
+        _mint(0x643e9a6158feaAdbe46c96a5a990DAFc4E746EB2); // Cryptasha
+        _mint(0xE3f27DEFf96fe178e87559F36Cbf868B9E75967D); // Sasquatch
     }
 
     /// ============ Storage ============
 
     IERC20 private constant SHARK = IERC20(0x232AFcE9f1b3AAE7cb408e482E847250843DB931);
     IERC721 private constant GNARS = IERC721(0x494715B2a3C75DaDd24929835B658a1c19bd4552);
+    IERC721 private constant BONEY_BATZ = IERC721(0x4d2bb7D45bBe10E43Ad1Ba569Ce85F19e85812A3);
+    IERC721 private constant BULLFRUG_MUTANT_CLUB =
+        IERC721(0x327d2E8bb8ac6F4b3E79f8c12609Cf9bcf9ac3F0);
     address private constant TREASURY_ADDRESS = 0xAe7f458667f1B30746354aBC3157907d9F6FD15E;
     uint8 private constant MAX_SUPPLY = 100;
 
@@ -57,7 +60,11 @@ contract SharkStreet is ERC721, SlicerPurchasable, Ownable {
         // Add all requirements related to product purchase here
         // Return true if account is allowed to buy product
         if (tokenId == MAX_SUPPLY) revert MaxSupply();
-        isAllowed = SHARK.balanceOf(buyer) >= 10000 * 10**18 || GNARS.balanceOf(buyer) != 0;
+        isAllowed =
+            SHARK.balanceOf(buyer) >= 10**22 ||
+            GNARS.balanceOf(buyer) != 0 ||
+            BONEY_BATZ.balanceOf(buyer) != 0 ||
+            BULLFRUG_MUTANT_CLUB.balanceOf(buyer) != 0;
     }
 
     /**
@@ -83,7 +90,7 @@ contract SharkStreet is ERC721, SlicerPurchasable, Ownable {
             )
         ) revert NotAllowed();
 
-        // Add product purchase logic here
+        // Mint 1 NFT
         _mint(account);
     }
 
@@ -96,8 +103,6 @@ contract SharkStreet is ERC721, SlicerPurchasable, Ownable {
 
     /**
      * @notice Returns totalSupply
-     *
-     * Calculated from current tokenIds of drop[1] and drop[2]
      */
     function totalSupply() external view returns (uint256) {
         return tokenId;

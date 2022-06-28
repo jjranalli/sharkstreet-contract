@@ -4,20 +4,20 @@ import { SharkStreet } from "../typechain-types/SharkStreet"
 
 // Set these before proceeding
 const env = "mainnet"
-const slicerId = 1 // The ID of the slicer that will be able to interact with this contract
-const name = "Shark Street" // ERC721 Name
-const symbol = "SKST" // ERC721 Symbol
-const initOwner = "" // Address of initial contract owner
+const slicerId = 10 // The ID of the slicer that will be able to interact with this contract
+const name = "Shark Street Comic" // ERC721 Name
+const symbol = "SHARK STREET" // ERC721 Symbol
+const initOwner = "0x728A4DDe804aeDaF93AC839C9B0Fce031e0361af" // Address of initial contract owner
 
 async function main() {
   console.log("deploying")
 
   const CONTRACT = await ethers.getContractFactory("SharkStreet")
   const contract = (await CONTRACT.deploy(
-    name,
-    symbol,
     addresses[env]["ProductsModule"],
-    slicerId
+    slicerId,
+    name,
+    symbol
   )) as SharkStreet
   await contract.deployed()
 
