@@ -1,17 +1,17 @@
 import { ethers } from "hardhat"
 import { BigNumber } from "ethers"
-import { a0, jb, JBOwner } from "../../test/setup"
+import { a0, jb, JBOwner } from "../../setup"
 
-import { OperatorStore } from "../../typechain-types/OperatorStore"
-import { Projects } from "../../typechain-types/Projects"
-import { Prices } from "../../typechain-types/Prices"
-import { TerminalDirectory } from "../../typechain-types/TerminalDirectory"
-import { FundingCycles } from "../../typechain-types/FundingCycles"
-import { TicketBooth } from "../../typechain-types/TicketBooth"
-import { ModStore } from "../../typechain-types/ModStore"
-import { Governance } from "../../typechain-types/Governance"
-import { TerminalV1 } from "../../typechain-types/TerminalV1"
-import { TerminalV11 } from "../../typechain-types/TerminalV11"
+import { OperatorStore } from "../../../typechain-types/OperatorStore"
+import { Projects } from "../../../typechain-types/Projects"
+import { Prices } from "../../../typechain-types/Prices"
+import { TerminalDirectory } from "../../../typechain-types/TerminalDirectory"
+import { FundingCycles } from "../../../typechain-types/FundingCycles"
+import { TicketBooth } from "../../../typechain-types/TicketBooth"
+import { ModStore } from "../../../typechain-types/ModStore"
+import { Governance } from "../../../typechain-types/Governance"
+import { TerminalV1 } from "../../../typechain-types/TerminalV1"
+import { TerminalV11 } from "../../../typechain-types/TerminalV11"
 
 export let operatorStore: OperatorStore,
   projects: Projects,

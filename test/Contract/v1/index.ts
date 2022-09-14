@@ -1,8 +1,8 @@
 import { expect } from "chai"
 import { ethers } from "hardhat"
-import { SharkStreet } from "../../typechain-types/SharkStreet"
-import { ERC721Test } from "../../typechain-types/ERC721Test"
-import { createSlicer, createProduct } from "../../utils"
+import { SharkStreet } from "../../../typechain-types/SharkStreet"
+import { ERC721Test } from "../../../typechain-types/ERC721Test"
+import { createSlicer, createProduct } from "../../helpers"
 import {
   a0,
   a1,
@@ -14,7 +14,7 @@ import {
   onProductPurchaseSignature,
   productsModule,
   slx,
-} from "../setup"
+} from "../../setup"
 
 describe("{SharkStreet}", () => {
   let sharkStreet: SharkStreet
@@ -27,10 +27,10 @@ describe("{SharkStreet}", () => {
     const ERC721TEST = await ethers.getContractFactory("ERC721Test")
 
     // Create slicer
-    const { tokenId } = await createSlicer(
+    const { tokenId, slicerAddress } = await createSlicer(
       [
-        { account: a0, shares: 90 },
-        { account: a1, shares: 10 },
+        { account: a0, shares: 90, transfersAllowedWhileLocked: false },
+        { account: a1, shares: 10, transfersAllowedWhileLocked: false },
       ],
       20,
       0,
@@ -54,7 +54,7 @@ describe("{SharkStreet}", () => {
 
     // Create products
 
-    await createProduct(slicerId, 1, 100, [], true, false, [], {
+    await createProduct(slicerId, slicerAddress, 1, 100, [], true, false, [], {
       externalAddress: sharkStreet.address,
       checkFunctionSignature: isPurchaseAllowedSignature,
       execFunctionSignature: onProductPurchaseSignature,

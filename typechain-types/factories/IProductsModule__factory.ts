@@ -50,6 +50,11 @@ const _abi = [
               },
               {
                 internalType: "address",
+                name: "externalAddress",
+                type: "address",
+              },
+              {
+                internalType: "address",
                 name: "currency",
                 type: "address",
               },
@@ -86,6 +91,16 @@ const _abi = [
           {
             internalType: "bool",
             name: "isInfinite",
+            type: "bool",
+          },
+          {
+            internalType: "bool",
+            name: "isExternalCallPaymentRelative",
+            type: "bool",
+          },
+          {
+            internalType: "bool",
+            name: "isExternalCallPreferredToken",
             type: "bool",
           },
         ],
@@ -138,6 +153,35 @@ const _abi = [
         name: "slicerId",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "productId",
+        type: "uint256",
+      },
+    ],
+    name: "availableUnits",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "units",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "isInfinite",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "slicerId",
+        type: "uint256",
+      },
     ],
     name: "ethBalance",
     outputs: [
@@ -145,6 +189,35 @@ const _abi = [
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "slicerId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "productId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "isProductOwner",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "isAllowed",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -203,27 +276,59 @@ const _abi = [
         type: "uint256",
       },
       {
-        internalType: "uint32",
+        internalType: "uint256",
         name: "productId",
-        type: "uint32",
+        type: "uint256",
       },
       {
         internalType: "address",
         name: "currency",
         type: "address",
       },
+      {
+        internalType: "uint256",
+        name: "quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "buyer",
+        type: "address",
+      },
+      {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
     ],
     name: "productPrice",
     outputs: [
       {
-        internalType: "uint256",
-        name: "ethPayment",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "currencyPayment",
-        type: "uint256",
+        components: [
+          {
+            internalType: "uint256",
+            name: "eth",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "currency",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "ethExternalCall",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "currencyExternalCall",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Price",
+        name: "price",
+        type: "tuple",
       },
     ],
     stateMutability: "view",
@@ -250,9 +355,9 @@ const _abi = [
         type: "uint256",
       },
       {
-        internalType: "uint32",
+        internalType: "uint256",
         name: "productId",
-        type: "uint32",
+        type: "uint256",
       },
     ],
     name: "removeProduct",
@@ -268,9 +373,9 @@ const _abi = [
         type: "uint256",
       },
       {
-        internalType: "uint32",
+        internalType: "uint256",
         name: "productId",
-        type: "uint32",
+        type: "uint256",
       },
       {
         internalType: "uint8",
@@ -306,6 +411,11 @@ const _abi = [
           },
           {
             internalType: "address",
+            name: "externalAddress",
+            type: "address",
+          },
+          {
+            internalType: "address",
             name: "currency",
             type: "address",
           },
@@ -328,9 +438,9 @@ const _abi = [
         type: "uint256",
       },
       {
-        internalType: "uint32",
+        internalType: "uint256",
         name: "productId",
-        type: "uint32",
+        type: "uint256",
       },
     ],
     name: "validatePurchase",
@@ -362,9 +472,9 @@ const _abi = [
         type: "uint256",
       },
       {
-        internalType: "uint32",
+        internalType: "uint256",
         name: "productId",
-        type: "uint32",
+        type: "uint256",
       },
     ],
     name: "validatePurchaseUnits",

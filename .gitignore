@@ -15,7 +15,7 @@
 /cache
 /artifacts
 /.openzeppelin
-/contracts/utils/sliceV1
+/contracts/utils/slice
 
 # debug
 npm-debug.log*

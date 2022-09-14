@@ -4,9 +4,9 @@ import { SliceCore } from "../typechain-types/SliceCore"
 import { SlicerManager } from "../typechain-types/SlicerManager"
 import { ProductsModule } from "../typechain-types/ProductsModule"
 import { FundsModule } from "../typechain-types/FundsModule"
-import { Erc20 } from "../typechain-types/ERC20"
-import { deployJB, deployUUPS, upgradeUUPS } from "../utils"
-import { SLXAddress } from "../utils/deployJB/deployJB"
+import { ERC20 } from "../typechain-types/ERC20"
+import { deployJB, deployUUPS, upgradeUUPS } from "./helpers"
+import { SLXAddress } from "./helpers/deployJB/deployJB"
 
 /**
  * @title Setup file
@@ -42,7 +42,7 @@ export let addr0: Signer,
   productsModule: ProductsModule,
   fundsModule: FundsModule,
   slicerManager: SlicerManager,
-  slx: Erc20,
+  slx: ERC20,
   signature721 = "0xfaf2e80e",
   signature1155 = "0x81bfbb80",
   onProductPurchaseSignature = "0xa23fffb9",
@@ -124,7 +124,10 @@ before(async () => {
   // Deploy JB contracts + SLX
   await deployJB()
 
-  slx = (await ethers.getContractAt("ERC20", SLXAddress)) as Erc20
+  slx = (await ethers.getContractAt(
+    "@openzeppelin/contracts/token/ERC20/ERC20.sol:ERC20",
+    SLXAddress
+  )) as ERC20
 
   await slx.approve(productsModule.address, 10000000000)
 

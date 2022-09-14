@@ -1,13 +1,14 @@
 import { BigNumber } from "ethers"
 import { ethers } from "hardhat"
-import { Slicer } from "../../typechain-types/Slicer"
-import { getEventArgsByIndex } from ".."
+import { Slicer } from "../../../typechain-types/Slicer"
+import { getEventArgsByIndex } from "../../helpers"
 const { getContractAt } = ethers
 import { BigNumberish } from "ethers"
-import { productsModule } from "../../test/setup"
+import { productsModule } from "../../setup"
 
 export const createProduct = async (
   slicerId: number,
+  slicerAddress: string,
   maxUnits_ = 0,
   units = 100,
   prices:
@@ -16,11 +17,13 @@ export const createProduct = async (
         currency: string
         dynamicPricing: boolean
         value: BigNumberish
+        externalAddress: string
       }[] = [
     {
       currency: ethers.constants.AddressZero,
       dynamicPricing: false,
       value: ethers.utils.parseEther("1.0"),
+      externalAddress: ethers.constants.AddressZero,
     },
   ],
   isFree_ = false,
@@ -34,7 +37,7 @@ export const createProduct = async (
     checkFunctionSignature: string
     execFunctionSignature: string
     data: any
-    value: BigNumber
+    value: BigNumberish
   } = {
     externalAddress: ethers.constants.AddressZero,
     checkFunctionSignature: "0x00000000",
@@ -42,8 +45,11 @@ export const createProduct = async (
     data: [],
     value: ethers.utils.parseEther("0"),
   },
+  isExternalCallPaymentRelative = false,
+  isExternalCallPreferredToken = false,
   category = 0
 ) => {
+  const slicer = (await getContractAt("Slicer", slicerAddress)) as Slicer
   const productPrice =
     typeof prices == "string"
       ? [
@@ -51,6 +57,7 @@ export const createProduct = async (
             currency: ethers.constants.AddressZero,
             dynamicPricing: false,
             value: ethers.utils.parseEther(prices),
+            externalAddress: ethers.constants.AddressZero,
           },
         ]
       : prices
@@ -69,29 +76,25 @@ export const createProduct = async (
           purchaseData: "0x1234",
           subSlicerProducts: subSlicersProductsParam,
           currencyPrices: productPrice,
+          isExternalCallPaymentRelative,
+          isExternalCallPreferredToken,
         },
         externalCallData
       )
     ).wait()
   ).events
-  const [
-    ,
-    productId,
-    categoryIndex,
+  const [, productId, categoryIndex, creator, params, externalCall] =
+    getEventArgsByIndex(txEvents, "ProductAdded", [0, 1, 2, 3, 4, 5])
+
+  const {
     isFree,
-    maxUnits,
     isInfinite,
-    availableUnits,
-    creator,
+    maxUnitsPerBuyer: maxUnits,
     data,
+    availableUnits,
     subSlicerProducts,
     currencyPrices,
-    externalCall,
-  ] = getEventArgsByIndex(
-    txEvents,
-    "ProductAdded",
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  )
+  } = params
 
   return {
     productId,

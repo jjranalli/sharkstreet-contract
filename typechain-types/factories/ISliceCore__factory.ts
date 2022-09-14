@@ -495,49 +495,66 @@ const _abi = [
       {
         components: [
           {
+            components: [
+              {
+                internalType: "address",
+                name: "account",
+                type: "address",
+              },
+              {
+                internalType: "uint32",
+                name: "shares",
+                type: "uint32",
+              },
+              {
+                internalType: "bool",
+                name: "transfersAllowedWhileLocked",
+                type: "bool",
+              },
+            ],
+            internalType: "struct Payee[]",
+            name: "payees",
+            type: "tuple[]",
+          },
+          {
+            internalType: "uint256",
+            name: "minimumShares",
+            type: "uint256",
+          },
+          {
+            internalType: "address[]",
+            name: "currencies",
+            type: "address[]",
+          },
+          {
+            internalType: "uint256",
+            name: "releaseTimelock",
+            type: "uint256",
+          },
+          {
+            internalType: "uint40",
+            name: "transferTimelock",
+            type: "uint40",
+          },
+          {
             internalType: "address",
-            name: "account",
+            name: "controller",
             type: "address",
           },
           {
-            internalType: "uint32",
-            name: "shares",
-            type: "uint32",
+            internalType: "uint8",
+            name: "slicerFlags",
+            type: "uint8",
+          },
+          {
+            internalType: "uint8",
+            name: "sliceCoreFlags",
+            type: "uint8",
           },
         ],
-        internalType: "struct Payee[]",
-        name: "payees",
-        type: "tuple[]",
-      },
-      {
-        internalType: "uint256",
-        name: "minimumShares",
-        type: "uint256",
-      },
-      {
-        internalType: "address[]",
-        name: "currencies",
-        type: "address[]",
-      },
-      {
-        internalType: "uint256",
-        name: "releaseTimelock",
-        type: "uint256",
-      },
-      {
-        internalType: "uint40",
-        name: "transferableTimelock",
-        type: "uint40",
-      },
-      {
-        internalType: "bool",
-        name: "isImmutable",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "isControlled",
-        type: "bool",
+        internalType: "struct SliceParams",
+        name: "params",
+        type: "tuple",
       },
     ],
     name: "slice",

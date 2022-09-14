@@ -352,12 +352,23 @@ export interface ISlicer extends BaseContract {
     slicerInfo(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, string, boolean, boolean, string[]] & {
+      [
+        BigNumber,
+        BigNumber,
+        string,
+        boolean,
+        boolean,
+        boolean,
+        boolean,
+        string[]
+      ] & {
         tokenId: BigNumber;
         minimumShares: BigNumber;
         creator: string;
         isImmutable: boolean;
-        isControlled: boolean;
+        currenciesControlled: boolean;
+        productsControlled: boolean;
+        acceptsAllCurrencies: boolean;
         currencies: string[];
       }
     >;
@@ -492,12 +503,23 @@ export interface ISlicer extends BaseContract {
   slicerInfo(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, string, boolean, boolean, string[]] & {
+    [
+      BigNumber,
+      BigNumber,
+      string,
+      boolean,
+      boolean,
+      boolean,
+      boolean,
+      string[]
+    ] & {
       tokenId: BigNumber;
       minimumShares: BigNumber;
       creator: string;
       isImmutable: boolean;
-      isControlled: boolean;
+      currenciesControlled: boolean;
+      productsControlled: boolean;
+      acceptsAllCurrencies: boolean;
       currencies: string[];
     }
   >;
@@ -634,12 +656,23 @@ export interface ISlicer extends BaseContract {
     slicerInfo(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, string, boolean, boolean, string[]] & {
+      [
+        BigNumber,
+        BigNumber,
+        string,
+        boolean,
+        boolean,
+        boolean,
+        boolean,
+        string[]
+      ] & {
         tokenId: BigNumber;
         minimumShares: BigNumber;
         creator: string;
         isImmutable: boolean;
-        isControlled: boolean;
+        currenciesControlled: boolean;
+        productsControlled: boolean;
+        acceptsAllCurrencies: boolean;
         currencies: string[];
       }
     >;

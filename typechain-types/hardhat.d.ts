@@ -181,6 +181,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IErc20Permit__factory>;
     getContractFactory(
+      name: "ERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20__factory>;
+    getContractFactory(
       name: "ERC721",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC721__factory>;
@@ -225,10 +229,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SlicerPurchasable__factory>;
     getContractFactory(
-      name: "SlicerPurchasablePayable",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.SlicerPurchasablePayable__factory>;
-    getContractFactory(
       name: "ISlicerPurchasable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ISlicerPurchasable__factory>;
@@ -241,6 +241,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SharkStreet__factory>;
     getContractFactory(
+      name: "SharkStreetV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SharkStreetV2__factory>;
+    getContractFactory(
       name: "ERC721Test",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC721Test__factory>;
@@ -248,6 +252,10 @@ declare module "hardhat/types/runtime" {
       name: "SharkStreetTest",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SharkStreetTest__factory>;
+    getContractFactory(
+      name: "SharkStreetV2Test",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SharkStreetV2Test__factory>;
     getContractFactory(
       name: "JuiceboxProject",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -489,6 +497,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IOwnable__factory>;
     getContractFactory(
+      name: "ISliceProductPrice",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ISliceProductPrice__factory>;
+    getContractFactory(
       name: "ProductsModule",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ProductsModule__factory>;
@@ -512,10 +524,6 @@ declare module "hardhat/types/runtime" {
       name: "EmptyUUPSBeacon",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.EmptyUUPSBeacon__factory>;
-    getContractFactory(
-      name: "ProxyRegistry",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ProxyRegistry__factory>;
 
     getContractAt(
       name: "AggregatorV3Interface",
@@ -728,6 +736,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IErc20Permit>;
     getContractAt(
+      name: "ERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20>;
+    getContractAt(
       name: "ERC721",
       address: string,
       signer?: ethers.Signer
@@ -783,11 +796,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.SlicerPurchasable>;
     getContractAt(
-      name: "SlicerPurchasablePayable",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.SlicerPurchasablePayable>;
-    getContractAt(
       name: "ISlicerPurchasable",
       address: string,
       signer?: ethers.Signer
@@ -803,6 +811,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.SharkStreet>;
     getContractAt(
+      name: "SharkStreetV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SharkStreetV2>;
+    getContractAt(
       name: "ERC721Test",
       address: string,
       signer?: ethers.Signer
@@ -812,6 +825,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.SharkStreetTest>;
+    getContractAt(
+      name: "SharkStreetV2Test",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SharkStreetV2Test>;
     getContractAt(
       name: "JuiceboxProject",
       address: string,
@@ -1113,6 +1131,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IOwnable>;
     getContractAt(
+      name: "ISliceProductPrice",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ISliceProductPrice>;
+    getContractAt(
       name: "ProductsModule",
       address: string,
       signer?: ethers.Signer
@@ -1142,11 +1165,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.EmptyUUPSBeacon>;
-    getContractAt(
-      name: "ProxyRegistry",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ProxyRegistry>;
 
     // default types
     getContractFactory(

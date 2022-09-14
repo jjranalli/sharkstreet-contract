@@ -463,7 +463,17 @@ const _abi = [
       },
       {
         internalType: "bool",
-        name: "isControlled",
+        name: "currenciesControlled",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "productsControlled",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "acceptsAllCurrencies",
         type: "bool",
       },
       {

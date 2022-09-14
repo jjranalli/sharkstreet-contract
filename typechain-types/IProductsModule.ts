@@ -31,12 +31,14 @@ export type SubSlicerProductStructOutput = [BigNumber, number] & {
 export type CurrencyPriceStruct = {
   value: BigNumberish;
   dynamicPricing: boolean;
+  externalAddress: string;
   currency: string;
 };
 
-export type CurrencyPriceStructOutput = [BigNumber, boolean, string] & {
+export type CurrencyPriceStructOutput = [BigNumber, boolean, string, string] & {
   value: BigNumber;
   dynamicPricing: boolean;
+  externalAddress: string;
   currency: string;
 };
 
@@ -49,6 +51,8 @@ export type ProductParamsStruct = {
   maxUnitsPerBuyer: BigNumberish;
   isFree: boolean;
   isInfinite: boolean;
+  isExternalCallPaymentRelative: boolean;
+  isExternalCallPreferredToken: boolean;
 };
 
 export type ProductParamsStructOutput = [
@@ -58,6 +62,8 @@ export type ProductParamsStructOutput = [
   string,
   number,
   number,
+  boolean,
+  boolean,
   boolean,
   boolean
 ] & {
@@ -69,6 +75,8 @@ export type ProductParamsStructOutput = [
   maxUnitsPerBuyer: number;
   isFree: boolean;
   isInfinite: boolean;
+  isExternalCallPaymentRelative: boolean;
+  isExternalCallPreferredToken: boolean;
 };
 
 export type FunctionStruct = {
@@ -115,18 +123,34 @@ export type PurchaseParamsStructOutput = [
   buyerCustomData: string;
 };
 
+export type PriceStruct = {
+  eth: BigNumberish;
+  currency: BigNumberish;
+  ethExternalCall: BigNumberish;
+  currencyExternalCall: BigNumberish;
+};
+
+export type PriceStructOutput = [BigNumber, BigNumber, BigNumber, BigNumber] & {
+  eth: BigNumber;
+  currency: BigNumber;
+  ethExternalCall: BigNumber;
+  currencyExternalCall: BigNumber;
+};
+
 export interface IProductsModuleInterface extends utils.Interface {
   contractName: "IProductsModule";
   functions: {
-    "addProduct(uint256,((uint128,uint32)[],(uint248,bool,address)[],bytes,bytes,uint32,uint8,bool,bool),(bytes,uint256,address,bytes4,bytes4))": FunctionFragment;
+    "addProduct(uint256,((uint128,uint32)[],(uint248,bool,address,address)[],bytes,bytes,uint32,uint8,bool,bool,bool,bool),(bytes,uint256,address,bytes4,bytes4))": FunctionFragment;
+    "availableUnits(uint256,uint256)": FunctionFragment;
     "ethBalance(uint256)": FunctionFragment;
+    "isProductOwner(uint256,uint256,address)": FunctionFragment;
     "payProducts(address,(uint128,uint32,address,uint32,bytes)[])": FunctionFragment;
-    "productPrice(uint256,uint32,address)": FunctionFragment;
+    "productPrice(uint256,uint256,address,uint256,address,bytes)": FunctionFragment;
     "releaseEthToSlicer(uint256)": FunctionFragment;
-    "removeProduct(uint256,uint32)": FunctionFragment;
-    "setProductInfo(uint256,uint32,uint8,bool,bool,uint32,(uint248,bool,address)[])": FunctionFragment;
-    "validatePurchase(uint256,uint32)": FunctionFragment;
-    "validatePurchaseUnits(address,uint256,uint32)": FunctionFragment;
+    "removeProduct(uint256,uint256)": FunctionFragment;
+    "setProductInfo(uint256,uint256,uint8,bool,bool,uint32,(uint248,bool,address,address)[])": FunctionFragment;
+    "validatePurchase(uint256,uint256)": FunctionFragment;
+    "validatePurchaseUnits(address,uint256,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -134,8 +158,16 @@ export interface IProductsModuleInterface extends utils.Interface {
     values: [BigNumberish, ProductParamsStruct, FunctionStruct]
   ): string;
   encodeFunctionData(
+    functionFragment: "availableUnits",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "ethBalance",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isProductOwner",
+    values: [BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "payProducts",
@@ -143,7 +175,14 @@ export interface IProductsModuleInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "productPrice",
-    values: [BigNumberish, BigNumberish, string]
+    values: [
+      BigNumberish,
+      BigNumberish,
+      string,
+      BigNumberish,
+      string,
+      BytesLike
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "releaseEthToSlicer",
@@ -175,7 +214,15 @@ export interface IProductsModuleInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "addProduct", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "availableUnits",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "ethBalance", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isProductOwner",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "payProducts",
     data: BytesLike
@@ -243,10 +290,25 @@ export interface IProductsModule extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    availableUnits(
+      slicerId: BigNumberish,
+      productId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, boolean] & { units: BigNumber; isInfinite: boolean }
+    >;
+
     ethBalance(
       slicerId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    isProductOwner(
+      slicerId: BigNumberish,
+      productId: BigNumberish,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean] & { isAllowed: boolean }>;
 
     payProducts(
       buyer: string,
@@ -258,13 +320,11 @@ export interface IProductsModule extends BaseContract {
       slicerId: BigNumberish,
       productId: BigNumberish,
       currency: string,
+      quantity: BigNumberish,
+      buyer: string,
+      data: BytesLike,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        ethPayment: BigNumber;
-        currencyPayment: BigNumber;
-      }
-    >;
+    ): Promise<[PriceStructOutput] & { price: PriceStructOutput }>;
 
     releaseEthToSlicer(
       slicerId: BigNumberish,
@@ -311,10 +371,23 @@ export interface IProductsModule extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  availableUnits(
+    slicerId: BigNumberish,
+    productId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, boolean] & { units: BigNumber; isInfinite: boolean }>;
+
   ethBalance(
     slicerId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  isProductOwner(
+    slicerId: BigNumberish,
+    productId: BigNumberish,
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   payProducts(
     buyer: string,
@@ -326,13 +399,11 @@ export interface IProductsModule extends BaseContract {
     slicerId: BigNumberish,
     productId: BigNumberish,
     currency: string,
+    quantity: BigNumberish,
+    buyer: string,
+    data: BytesLike,
     overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber] & {
-      ethPayment: BigNumber;
-      currencyPayment: BigNumber;
-    }
-  >;
+  ): Promise<PriceStructOutput>;
 
   releaseEthToSlicer(
     slicerId: BigNumberish,
@@ -379,10 +450,25 @@ export interface IProductsModule extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    availableUnits(
+      slicerId: BigNumberish,
+      productId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, boolean] & { units: BigNumber; isInfinite: boolean }
+    >;
+
     ethBalance(
       slicerId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    isProductOwner(
+      slicerId: BigNumberish,
+      productId: BigNumberish,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     payProducts(
       buyer: string,
@@ -394,13 +480,11 @@ export interface IProductsModule extends BaseContract {
       slicerId: BigNumberish,
       productId: BigNumberish,
       currency: string,
+      quantity: BigNumberish,
+      buyer: string,
+      data: BytesLike,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        ethPayment: BigNumber;
-        currencyPayment: BigNumber;
-      }
-    >;
+    ): Promise<PriceStructOutput>;
 
     releaseEthToSlicer(
       slicerId: BigNumberish,
@@ -450,8 +534,21 @@ export interface IProductsModule extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    availableUnits(
+      slicerId: BigNumberish,
+      productId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     ethBalance(
       slicerId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isProductOwner(
+      slicerId: BigNumberish,
+      productId: BigNumberish,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -465,6 +562,9 @@ export interface IProductsModule extends BaseContract {
       slicerId: BigNumberish,
       productId: BigNumberish,
       currency: string,
+      quantity: BigNumberish,
+      buyer: string,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -512,8 +612,21 @@ export interface IProductsModule extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    availableUnits(
+      slicerId: BigNumberish,
+      productId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     ethBalance(
       slicerId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isProductOwner(
+      slicerId: BigNumberish,
+      productId: BigNumberish,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -527,6 +640,9 @@ export interface IProductsModule extends BaseContract {
       slicerId: BigNumberish,
       productId: BigNumberish,
       currency: string,
+      quantity: BigNumberish,
+      buyer: string,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

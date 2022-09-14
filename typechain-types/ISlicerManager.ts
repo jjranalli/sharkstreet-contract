@@ -17,25 +17,60 @@ import { FunctionFragment, Result } from "@ethersproject/abi";
 import { Listener, Provider } from "@ethersproject/providers";
 import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
+export type PayeeStruct = {
+  account: string;
+  shares: BigNumberish;
+  transfersAllowedWhileLocked: boolean;
+};
+
+export type PayeeStructOutput = [string, number, boolean] & {
+  account: string;
+  shares: number;
+  transfersAllowedWhileLocked: boolean;
+};
+
+export type SliceParamsStruct = {
+  payees: PayeeStruct[];
+  minimumShares: BigNumberish;
+  currencies: string[];
+  releaseTimelock: BigNumberish;
+  transferTimelock: BigNumberish;
+  controller: string;
+  slicerFlags: BigNumberish;
+  sliceCoreFlags: BigNumberish;
+};
+
+export type SliceParamsStructOutput = [
+  PayeeStructOutput[],
+  BigNumber,
+  string[],
+  BigNumber,
+  number,
+  string,
+  number,
+  number
+] & {
+  payees: PayeeStructOutput[];
+  minimumShares: BigNumber;
+  currencies: string[];
+  releaseTimelock: BigNumber;
+  transferTimelock: number;
+  controller: string;
+  slicerFlags: number;
+  sliceCoreFlags: number;
+};
+
 export interface ISlicerManagerInterface extends utils.Interface {
   contractName: "ISlicerManager";
   functions: {
-    "_createSlicer(address,bool,bool,uint256,uint256,uint256,address[])": FunctionFragment;
+    "_createSlicer(address,uint256,((address,uint32,bool)[],uint256,address[],uint256,uint40,address,uint8,uint8))": FunctionFragment;
     "_upgradeSlicers(address)": FunctionFragment;
     "implementation()": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "_createSlicer",
-    values: [
-      string,
-      boolean,
-      boolean,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      string[]
-    ]
+    values: [string, BigNumberish, SliceParamsStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "_upgradeSlicers",
@@ -92,12 +127,8 @@ export interface ISlicerManager extends BaseContract {
   functions: {
     _createSlicer(
       creator: string,
-      isImmutable: boolean,
-      isControlled: boolean,
       id: BigNumberish,
-      minimumShares: BigNumberish,
-      releaseTimelock: BigNumberish,
-      currencies: string[],
+      params: SliceParamsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -111,12 +142,8 @@ export interface ISlicerManager extends BaseContract {
 
   _createSlicer(
     creator: string,
-    isImmutable: boolean,
-    isControlled: boolean,
     id: BigNumberish,
-    minimumShares: BigNumberish,
-    releaseTimelock: BigNumberish,
-    currencies: string[],
+    params: SliceParamsStruct,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -130,12 +157,8 @@ export interface ISlicerManager extends BaseContract {
   callStatic: {
     _createSlicer(
       creator: string,
-      isImmutable: boolean,
-      isControlled: boolean,
       id: BigNumberish,
-      minimumShares: BigNumberish,
-      releaseTimelock: BigNumberish,
-      currencies: string[],
+      params: SliceParamsStruct,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -152,12 +175,8 @@ export interface ISlicerManager extends BaseContract {
   estimateGas: {
     _createSlicer(
       creator: string,
-      isImmutable: boolean,
-      isControlled: boolean,
       id: BigNumberish,
-      minimumShares: BigNumberish,
-      releaseTimelock: BigNumberish,
-      currencies: string[],
+      params: SliceParamsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -172,12 +191,8 @@ export interface ISlicerManager extends BaseContract {
   populateTransaction: {
     _createSlicer(
       creator: string,
-      isImmutable: boolean,
-      isControlled: boolean,
       id: BigNumberish,
-      minimumShares: BigNumberish,
-      releaseTimelock: BigNumberish,
-      currencies: string[],
+      params: SliceParamsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
